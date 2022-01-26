@@ -1,0 +1,39 @@
+---
+title: "homework-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Question 6**
+
+Suppose we collect data for a group of students in a statistics class
+with variables X1 =hours studied, X2 =undergrad GPA, and Y =
+receive an A. We fit a logistic regression and produce estimated
+coefficient, ˆ β0 = −6, ˆβ1 = 0.05, ˆβ2 = 1.
+
+
+(a) Estimate the probability that a student who studies for 40 h and
+has an undergrad GPA of 3.5 gets an A in the class.
+
+**Equation for predicted probability: phat(X) = (e^ (-6+0.05X1 + X2)) / (1 + e^ (-6+0.05X1 + X2)) **
+```{r}
+nom = 2.71828**(-6 + 0.05*40 + 3.5)
+denom = 1 + nom
+nom / denom
+```
+**After plugging in the beta values in the predicted probability equation we get about a 37% chance that this student gets an A in the class**
+
+
+(b) How many hours would the student in part (a) need to study to
+have a 50% chance of getting an A in the class?
+
+**We can set phat(X) equal to 0.5 in the predicted probability equation. So 0.5 = (e^ (-6+0.05X1 + X2)) / (1 + e^ (-6+0.05X1 + X2)).Which is equivalent to  e^ (-6+0.05X1 + X2) = 1 We then take the log of both sides.**
+```{r}
+X1 = 2.5 / 0.05
+X1
+```
+
+**So the students would need to study 50 hours to have a 50% chance of getting an A in the class.**

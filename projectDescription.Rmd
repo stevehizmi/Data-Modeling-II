@@ -1,0 +1,116 @@
+
+---
+title: "Project description"
+author: "Karl Rohe"
+date: "March 10, 2021"
+output: html_document
+---
+
+
+
+In this project, you and your group must (1) say something about the world by (2) "curating" some data and (3) analyzing it. 
+
+**You must construct your data:** 
+Perhaps you have multiple primary data sources, but are linked by a "playground".  Perhaps you access a very large data source (e.g. Twitter API) and carefully subset the data ("zoom in") to find data that speaks to your question. Perhaps you imagine another way to construct/curate your data.   This constraint will make your project *definitively yours.* It will be more interesting.  For example, this prevents you from re-answer the same question for which your data was collected (which would be very boring, except in exceptional circumstances). It is not easy to fully describe this constraint, but we will discuss it more in class and you should ask questions.
+
+
+
+Learning objectives: 
+
+1) Identify an interesting problem that can be partially addressed with the tools in this course.  
+2) Gather, clean, and process relevant data.  
+3) Use the methodological tools from the course to create the partial answer. Interpret the “output”, diagnose the sensitivities, and illustrate with friendly visualizations.  
+4) Critically addresses the limitations of the study and the statistical conclusions.
+5) Communicate your results, including areas of concern, to a general audience.  
+
+
+Groups of 3 or 4.  
+
+
+  
+  
+You will be graded based upon:
+
+1) the interesting-ness of your question, data, and application  
+  - the application area should be interesting to you 
+  - the data you find should require some processing (subsetting, joining, etc)
+2) the appropriateness of your methods   
+  - simple techniques are good! 
+  - more complicated techniques are good too!  
+  - Most important is that the method is appropriate to answer your question with your data.
+3) the interpretation of the results   
+  - Write like a curious observer, not a sales person  
+4) the communication of your findings
+  - Care for your audience.  
+  - Summarize your findings in a clear thesis statement.
+  - Neat figures and visualizations  
+  - Well organized sections (introduction, data, methods, results, conclusion)
+  - Well organized paragraphs
+
+
+While there are no hard limits, your entire document should be roughly 1200 words +/- 300 words.
+
+
+
+
+Great projects start from a place of genuine curiosity.  Try to imagine things that *might* be measured and easily accessible AND which interest you.
+
+**In the end** (i.e. not yet!), you must ask and answer a question about the world (*not merely a question about your data*).
+
+
+### Paper structure
+
+The first section (~1-2 paragraphs) is the **introduction**.  It should 
+
+1)   motivate your question to the layperson,
+2)   convey your research question (this is the "story"), and
+2)   give a clear thesis statement that accurately summarizes your data analyses. 
+
+A clear thesis statement is   
+
+-   argumentative (make a claim, not just broadcast a topic),   
+-   controversial (debatable, not obvious),   
+-   supportable (defensible, given the resources from class and the assignment),   
+-   focused (answers the prompt and fits the page requirements, not too big or too small),   
+-   significant (why is it worth arguing for?),   
+-   directed (it is a condensed argument and hints at or almost outlines the direction of the paper)
+
+This is quoted [from here](https://www.vanderbilt.edu/writing/wp-content/uploads/sites/164/2016/10/Thesis-Statements-Script-2016.pdf). Click for more.  
+
+The second section of your document is the **data** section.  It should describe 
+
+1)  your *primary* data sources--url links, citations, AND data descriptions (some people re-post data that others collect... be sure to give proper credit to the workers/org that originally collected the data);
+2)   your data cleaning--describe the steps that you took.  As much as possible, it should be replicable via your .Rmd file but not visible in the .pdf (echo = FALSE)
+
+The third section of your document is the **methods** section.  It should describe  a brief description of the statistical technique(s) and a description of *why you chose them.*
+
+
+The fourth section of your paper contains the **results**.  What do you find?  Interpret the "output" with text and figures. 
+
+
+The final section of the paper is the **conclusion**.  It should return to your thesis statement/hypothesis.  Summarize the main evidence that supports your conclusions; reference back to key figures/tables/equations and highlight the important pieces.   Describe the limitations of your analysis, both big and small.  Describe issues that remain uncertain, but could be explored more fully with your available resources (+ more time).  
+
+The audience for your document is a general audience who is comfortable reading equations, but doesn't know anything about the content of our course or the topics that you wish to study.
+
+You will be graded based upon:   
+
+
+
+
+####  Throughout this process, curiosity is essential.
+
+The overarching goal is to learn how to ask and answer questions with data. When you are naturally curious about a topic, you will avoid the projects that I fear most. These projects have no intention, but also perfectly demonstrate the "textbook knowledge" of the course.  The easiest tell of a bad project:  a student finds some predictors $x$ and finds an outcome $y$ and puts it all into linear regression, treats the linear regression like a black box, then performs all of the "proper" interpretation of the results (including the diagnostics!).  This is a project that is both useless and boring, but also a demonstration of "the methods." After leaving my course, this author will rarely realize an opportunity for linear regression, because they have never realized it for themselves.  This author understands that linear regression is a sort of tool, like a hammer. This author understands how to swing a hammer (push the buttons). However, this author cannot build a structure, nor can this author contextualize why we bother swinging the hammer. This author understands data analysis, but only in isolation, not embedded in any purpose. This student will only use the methods when they have a boss that knows what they are doing.  I want you to be the boss!  Own it!  Here is how...
+
+When you begin the project with fundamental curiosity about the part of the world that generated your data, bad projects are trivially avoided.  Instead of mindlessly demonstrating the tools, your work has purpose.  As you play with your data, try to curate your curiosity into a **research question**.  What is it that makes it interesting?  What else is it related to?  
+
+Students often ask:  
+
+- How do I clean the data?   
+- Should I throw out missing values?    
+- What variables should I keep?    
+- Is it ok that I am combining data sources from different years?     
+- What statistical techniques am I required to use? What visualizations should I make?
+
+These questions (and other "how do I do this project?" questions) are answered by another question:  **How do you best address your curiosity?**  And remember, you get to decide what question you ask!  As you learn more, you are likely to discover a more interesting / more realistic / better informed question.  That is great!  Keep going!
+
+As your curiosity turns into a research question,  you should realizes many of the challenges of answering questions with data, including a fundamental dichotomy of Statistics: we want to make conclusions about the data source (i.e. IRL), but we only have measurements (i.e. data) from this source.  Consider the problems in (for example) measurement, missing data, imprecise measurements, confounding, etc.  How should you address these issues?  Or, must they be listed as limitations?  

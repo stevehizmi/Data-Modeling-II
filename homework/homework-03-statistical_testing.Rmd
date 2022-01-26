@@ -1,0 +1,203 @@
+
+---
+title: "Homework 3 for Stat 340; Statistical Testing"
+author: "Karl Rohe"
+output: html_document
+---
+
+```{r, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+```
+
+
+###  1) Summarize the *How not to be wrong* reading. 
+
+a) Give 2-4 sentences summarizing the reading.
+  **First thing that is mentioned is how to prove something wrong by first assuming its correct. In that sense, we can draw logical conclusions from the assumptions, and prove that the conclusion is wrong, hence the initial assumptions is incorrect. Then there is also another way to do this (instead says improbable than impossible, so not as strong of a conclusion) with the reductio ad unlikely. "Either an exceptional rare chance has occurred, or the theory of random distribution is not true".**
+  
+b) Write 2-4 sentences of reaction (question, comments, disagreed, something piqued your interest, etc) on the reading. 
+  **I really enjoyed the reading as a whole, as there were cool facts (like how subaru the car manufacturer got its name) across the reading and made it easy to follow. I also liked how their were multiple examples, with clarifications/summaries not too far into the explanation so the reader is still "on the same page" per se. I do wonder, is there anything out there that is considered a closed case that is really more improbably than impossible? like the example with the cluster of stars.** 
+
+
+
+
+
+###  2) Are odd birthdays independent?
+
+a) What does it mean that odd birthdays (as discussed in the text) are independent? Usually, the assumption of independence is about "the real world".  It isn't "in the data".  It is a "short story" that you need to say about how things could go wrong.    
+
+ **Odd birthdays being independent means that fi we know some data/set of birthdays, we aren't able to predict anything about the other birthdays in the data/set. The birthdays have no affect on each other.**
+  
+b) The text says that it is **wrong** to assume odd birthdays are independent. Why is that?   
+  
+  **Because of the Power of a test. The more people that are in the same room, the more likely that two people will share the same birthday, but the likelihood is significantly higher. So from this fact, it would not be for certain that odd birthdays are independent.**
+  
+c) The text says that it is still **reasonable** to assume odd birthdays are independent. Why is that?
+
+  **It's still reasonable because it isnt a "far-fetched" assumption. When thinking logically initially, it would be reasonable to think that someone being born on an odd birthday would have no affect on someone else also being born on an odd birthday.**
+  
+  
+  
+###  3) Green Bay Packers
+
+In last week's homework, we used Monte Carlo to compute the probability that the Packers would win 13 *or more* games out of 16 under (our best guess of) Olivia Munn's probability model. 
+
+We could imagine this as a statistical hypothesis test.  State the null hypothesis and the p-value. 
+
+**H0 (null hypothesis): The packers are an average team (50% winning rate)**
+```{r, warning=FALSE}
+# Copy and paste the code from the top of chapter 2.
+# Then, edit the functions simulate_X and check_if_X_in_A
+
+# First, write a function to simulate X
+simulate_X = function(){
+  return(rbinom(n = 1, size = 16, prob = 0.5))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  >= 13)
+}
+
+# Now, we are going to do it lots of times.  
+# Let's arrange the simulations in a data.frame with three columns
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+p_val = monte_carlo %>% summarise(mean(X_in_A))
+
+ggplot(monte_carlo, aes(x = X)) +
+  geom_histogram() + 
+  geom_vline(xintercept = 13)
+
+p_val
+
+```
+
+**The p-value is < 0.05 (about 0.01) which means we should reject the null hypothesis (that the packers are a so so team). So the packers are better than a so so team.**
+
+### 4) Fraud detection 1 
+
+```{r}
+longestRun = function(flips){
+  # the first flip is always a run of length 1.
+  MaxRunSoFar = 1
+  currentRun = 1
+  
+  for(i in 2:length(flips)){ # for every flip
+    # if it is equal to the last flip
+    if(flips[i]==flips[i-1]){
+      # then increase the length of the currentRun
+      currentRun = currentRun + 1
+      # and if the run is larger than the maxRunSoFar, redefine that.
+      if(currentRun>MaxRunSoFar) MaxRunSoFar = currentRun
+    }
+    # otherwise, 
+    if(flips[i]!=flips[i-1]){
+      # set the current run back to 1
+      currentRun=1
+  }
+  }
+  return(MaxRunSoFar)
+}
+```
+
+a) In the [fraud detection in coin flips example](LogicOfStatisticalTesting.html), suppose that you observe a longest run of 4 in a sequence of 200 coin flips.  What would the p-value be for the null hypothesis stated in the text?  
+
+```{r}
+sequence_of_flips = "THTHHHTTTTHTTTHTTHTHTTTTHHHTHHHTHTHHTHHHTHTTHHHTTTHTTTHHHTHTTTHTHHHTHTHTHHTTTHTHTHTTTHTHHHTTHTHHHHTHTTHTHTTHTHHHTHTHHTHTHTHHTHHHHTTHHTTHTTTHHHTHHHTHHTHHTHTTHTHHTHHHTHTHHHHTTHHHHTTTHTTHHHHTTHHTTHTTHHHH"
+
+s= sequence_of_flips %>% strsplit( split = "") %>% unlist() %>% longestRun()
+s
+```
+
+
+```{r, warning=FALSE}
+# First, write a function to simulate X
+simulate_X = function(){
+  return(sample(c("H","T"), 200,replace=T))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  <= s)
+}
+
+# Now, we are going to do it lots of times.  
+# Let's arrange the simulations in a data.frame with three columns
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+p_val = monte_carlo %>% summarise(mean(X_in_A))
+
+p_val
+```
+**p_val would be 0 if the observed longest run is 4 from the example in the text.**
+
+
+b) Suppose that you obesrve a longest run of 5 in a sequence of 10,000 flips (instead of 200).  Make a histogram of the random variable $X$ and give the p-value.   
+
+```{r}
+df <- NULL
+  for(i in 1:1000){
+    new <- longestRun(sample(c("H","T"), 10000,replace=T))
+    df = rbind(df, data.frame(longest_run = as.numeric(new)))
+  }
+
+ggplot(df, aes(x = longest_run)) +
+  geom_histogram() + 
+  geom_vline(xintercept = 5)
+
+right_side <- df %>% filter(longest_run <= 5)
+p_val <- nrow(right_side) / nrow(df)
+p_val
+```
+
+**We reject the null hypothesis(each coin flip is independent) because the p-val is 0.**
+
+### 5) Fraud detection 2 
+
+
+
+In the six sequences below, one of them is actually randomly generated from a fair coin.  Which one do yout think is?  Explain why?  
+
+  **First, I believe that the first flip is not actually randomly generated. Its seems to be exactly 50/50 in terms of flips, which is very unlikely to be randomly generated. Then, looking at flips 4,5 and 6 there are too many instances of only one coin being flipped sequentially for many flips in a row. Therefore I think the randomly generated one is between flip 2 and flip 3. I think its flip 2 because flip 3 has a few instances of either heads or tails landing face up many times in a row. Flip 2 seems the most random out of the 6 flips provided.**
+
+Here, you are not graded on whether you get the right answer, but rather based upon your reasoning. You should fuse your own insights and guesses with the things you've learned thus far.
+
+```{r}
+
+KarlsFlip1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHHTHTHTHTHTHTHTTHTHTHTHTHTHTHHTHTHTHTHTHTHTHTHTHTHTHTHTHTHHTTHTHTHTHTHTHTHTHTHTHTHTHTHHTHTHTHTHTHTHTHTHTHTHTHTTHTHTHTHTHTHTHTHTHTHTHTHTHHTHTHTHTHTHTHTHTHTHTHTHHTHTHTHTH"
+
+KarlsFlip2 = "HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT"
+
+KarlsFlip3 = "HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH"
+
+KarlsFlip4 = "HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH"
+
+KarlsFlip5 = "HHHHHHHHHHHTTTTTTTTTTTHHHHHHHHHHHHTTTTTTTTTTTHHHHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTHHHHHHHHTTTTTTTHHHHHHHHHTTTTTTTTTHHHHHHHHTTTHHHHHHHHHHHTTTTTTTTTTTHHHHHHHHHHHHTTTTTTTTTTTHHHHHHHHHHHHHTTTTTTTTTTHH"
+
+KarlsFlip6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
+```
+
+
+Here is a hint, hidden deep inside a story.
+
+In one sense, "independence" says that there are no patterns (of dependence).  But as we saw in last weeks homework, "independent" coin flips have a surprising pattern.  What other surprising (or unsurprising) patterns should independent coin flips have?
+
+I had a class in graduate school from Terry Speed (who was an expert witness in the OJ Simpson trial).  He said that a Las Vegas Casino had some electronic slot machines and they wanted to be sure that the random number generator was actually producing "random numbers".  This is important to them because, perhaps someone hacked the machines and knows how it is generating random numbers and could then use that to profit from the machines.  They asked him to consult (I don't know if he did).  Even though the machine could generate as many "random numbers" as one would want, it is very hard (i.e. impossible) to prove that they are independent.  In order to "test for independence" you first need to hypothesize about *how* they might be dependent.  So, all you can do is come up with new functions and know how they behave if things are actually independent.  The function in last weeks homework "longestRun" is a good test against humans because we are particularly biased against putting in long runs (it doesn't feel random!).  Put in language that you might have heard before, "we never accept the null hypothesis, we only *fail to reject the null hypothesis*".  Here, the null hypothesis is statistical independence and you can never accept it.  :(  sorry Las Vegas.

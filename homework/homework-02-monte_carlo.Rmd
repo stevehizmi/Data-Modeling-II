@@ -1,0 +1,258 @@
+###  1) Binomial and Poisson distribution
+
+Let $X  \sim Binomial(n = 10, p = 5/10)$. Compute $P(X >9)$.
+
+```{r,warning=FALSE}
+# Copy and paste the code from the top of chapter 2.
+# Then, edit the functions simulate_X and check_if_X_in_A
+
+library(dplyr)
+
+# First, write a function to simulate X
+simulate_X = function(){
+  return(rbinom(n = 1, size = 10, p = 5/10))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  > 9)
+}
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+
+Let $X  \sim Binomial(n = 50, p = 5/50)$. Compute $P(X  > 9)$.
+```{r,warning=FALSE}
+  # First, write a function to simulate X
+simulate_X = function(){
+  return(rbinom(n = 50, size = 50, p = 5/50))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  > 9)
+}
+
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+ 
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+Let $X  \sim Binomial(n = 100, p = 5/100)$. Compute $P(X >9)$.
+```{r,warning=FALSE}
+  # First, write a function to simulate X
+simulate_X = function(){
+  return(rbinom(n = 100, size = 100, p = 5/100))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  > 9)
+}
+
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+
+Let $X  \sim Poisson(\lambda = 5)$. Compute $P(X >9)$.
+```{r}
+  # First, write a function to simulate X
+simulate_X = function(){
+  return(rpois(n = 1, lambda = 5))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  > 9)
+}
+
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+
+###  2) Binomial and Poisson distribution (cont)
+
+In the last problem, note that $n\times p =5$ in the first three parts of the question and $\lambda = 5$ in the last part. 
+
+Compare the four probabilities from the four parts. Relate this to the discussion of catching fish and the Poisson distribution in chapter 1. 
+  - The last three probabilities were very similar, in around 3% probability. The first part, however was much closer to zero. I think these probabilities are similar, as in the fish example, because monte carlo estimates the true probability.
+
+
+###  3)  What role does r play?
+
+**Part 1:** Using Example 1 in the [Monte Carlo lecture notes](monte_carlo.html), run the simulation using r = 1000, r = 10,000 and r = 100,000.   Compare the Monte Carlo estimates to their true values.  
+``` {r}
+# First, write a function to simulate X
+simulate_X = function(){
+  return(rnorm(1))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  > 1.96)
+}
+
+# r = 100000 ~ 0.02487
+# r = 10000  ~ 0.0241
+# r = 1000   ~ 0.024
+r = 100000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+**Part 2:** If you repeat the above simulation, the Monte Carlo estimates change because they are random.  Does this mean that $P(X \in A)$ is random? Explain.
+ - No, each time the simulation is ran the probability is very close to the true value (0.029979). Although X may be random, the probability that X in A is not random as Monte Carlo estimates the true probability.
+
+
+
+###  4) Green Bay Packers
+
+The Green Bay Packers won 13 of their 16 regular season games this year (2019).  Olivia Munn, hillarious actress and former girlfriend of Aaron Rogers, says the Packers are just so so.  
+
+Let's interpret Olivia Munn's "so so" to mean that she thinks that each Packer's win is an independent, Bernoulli($p=.5$) random variable.  
+
+Use Monte Carlo to compute the probability that the Packers would win 13 *or more* games out of 16 under Olivia's probability model. 
+
+```{r}
+# Copy and paste the code from the top of chapter 2.
+# Then, edit the functions simulate_X and check_if_X_in_A
+
+# First, write a function to simulate X
+simulate_X = function(){
+  return(rbinom(n = 1, size = 16, prob = 0.5))
+}
+
+# Second, write a function to evaluate whether X \in A.
+check_if_X_in_A = function(X){
+  return(X  >= 13)
+}
+
+# Now, we are going to do it lots of times.  
+# Let's arrange the simulations in a data.frame with three columns
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+
+# about 1.2% chance packers win 13 or more games / 16 games
+```
+
+
+### 5) Lie detection   
+
+
+
+If you haven't filled in myFlips from last week's homework, don't keep reading!  It will be way more fun if you do that first.  I promise.  Enter your fake flips here:
+
+```{r}
+# paste your code from last week here:
+myFlips = "HTHHTHTHTTHHHTHTHTHHHTHTHTHHHHTHHTTTTTHTHHTHTHHTHHHTHHTHHTHHTTTTTTTHHTTHTTHTHTHTHTHHHTHTTHTHTTHTHHTHTHTHTHTTHTHTTTTTTTHTTHTHHTHHTHHTHTHTHHTHTHTHTHTHHTHTTHTHHTHTHTHHTHTHTHTHTTHTHTHTTHTHHTHTHTHTHTHTTTHT"
+nchar(myFlips)  #make sure it length 200
+```
+
+Suppose that someone actually flipped a coin 200 times.  Let the random variable $X$ be the "length of the longest run" of heads or tails.  For example, if a sequence of flips was HHTTTHTHH, then the length of the longest run is 3, because there were three T's in a row.  
+
+To help you out, here is how you simulate a sequence of heads/tails
+```{r}
+flips  = sample(c("H","T"), 200,replace=T)
+```
+and here is a function to compute $X$, the longest run:
+```{r}
+# you are welcome to trust that this function works.
+# but I would encourage you to look at the function to ensure that it makes sense to you.
+#  if you find an error, please let me know!  :)
+
+longestRun = function(flips){
+  # the first flip is always a run of length 1.
+  MaxRunSoFar = 1
+  currentRun = 1
+  
+  for(i in 2:length(flips)){ # for every flip
+    # if it is equal to the last flip
+    if(flips[i]==flips[i-1]){
+      # then increase the length of the currentRun
+      currentRun = currentRun + 1
+      # and if the run is larger than the maxRunSoFar, redefine that.
+      if(currentRun>MaxRunSoFar) MaxRunSoFar = currentRun
+    }
+    # otherwise, 
+    if(flips[i]!=flips[i-1]){
+      # set the current run back to 1
+      currentRun=1
+  }
+  }
+  return(MaxRunSoFar)
+}
+```
+
+
+**Part 1:** Simulate 10,000 $X$'s and make their histogram. 
+```{r}
+df <- NULL
+  for(i in 1:10000){
+    new <- longestRun(sample(c("H","T"), 200,replace=T))
+    df = rbind(df, data.frame(as.numeric(new)))
+  }
+hist(unlist(df))
+```
+
+**Part 2:** Compute $X$ for your fake sequence:
+```{r}
+# split up the characters:  
+x <-unlist(strsplit(myFlips, split = ""))  
+# find your longest run:
+longestRun(x)
+```
+
+**Part 3:** What proportion of the simulated $X$'s are larger than, or equal to, you longest run? 
+ - looks like about 80% of the simulated X's are larger than or equal to my longest run

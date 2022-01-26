@@ -1,0 +1,224 @@
+```{r, messge=FALSE}
+library(dplyr)
+library(tidyverse)
+```
+### 1) Poisson.
+
+**1a:** Compute the probability that a Poisson($\lambda = 1$) random variable is an even number.  You can generate a poisson random variable with `rpois(n = 1,lambda = 1)`.  You can check if `X` is even via 
+
+```{r}
+is.even <- function(X){ 
+  remainder_from_dividing_by_two = X %% 2
+  return(remainder_from_dividing_by_two == 0)
+}
+is.even(3)
+is.even(112)
+
+# simulates random poisson 
+simulate_poisson = function(lambda = 1){
+  rpois(n = 1, lambda = lambda)
+}
+
+# check if random poisson is an even number
+check_if_X_in_A = function(X){
+  return(is.even(X))
+}
+
+# run simulation r times to compute probability P(x % 2 == 0)
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_poisson()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+  
+**1b:**   Compute the probability that a Poisson($\lambda = 10$) random variable is even.
+```{r}
+# run same simulation as 1a, but lambda = 10
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_poisson(lambda = 10)
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo = as_tibble(monte_carlo)
+monte_carlo %>% summarise(mean(X_in_A))
+```
+**1c:**   Compute the probability that a Poisson($\lambda =10$) random variable is greater than 20.
+```{r}
+# run same simulation as 1b) but checks P(x > 20)
+check_if_X_in_A = function(X){
+  return(X > 20)
+}
+
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_poisson(lambda=10)
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo_prob20 = as_tibble(monte_carlo)
+monte_carlo_prob20 %>% summarise(mean(X_in_A))
+```
+**1d:**   Let $X \sim$ Poisson($\lambda =10$).   Use Monte Carlo to compute $\mathbb{E}(X)$.
+```{r}
+# run simulation, take average of all random numbers computed to find E(X)
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_poisson(10)
+ }
+
+monte_carlo_expectation = as_tibble(monte_carlo)
+monte_carlo_expectation %>% summarise(mean(X))
+```
+### 2) Geometric
+
+In class, we defined Geometric($p$) to be the number of Bernoulli($p$) coin flips required to get the first TRUE. So, FALSE FALSE TRUE would be 3. Some other places (including R and `rgeom`!) define Geometric($p$) to be the number of FALSE's before a true.  So, FALSE FALSE TRUE would be 2.  These definitions are very similar; the second is always one less than the first.  However, this difference might get annoying if you aren't careful.  
+
+**2a:**  Let $X \sim$ Geometric($p=1/10$)  in the way that we defined it in class.  Given that `Z <- rgeom(n = 1,prob = 1/10)` is always one less than the way we define it, write a function to simulate X (our way) from Z (in code above).  
+
+```{r}
+simulate_X = function(){
+  Z <- rgeom(n = 1, prob = 1/10)
+  
+  # class definition
+  return(Z + 1)
+}
+```
+
+**2b:**  Using the definitions in 2a, compute $\mathbb{E}(X)$ using Monte Carlo.  
+
+```{r}
+# run simulation, take average of all random numbers computed to find E(X)
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r))
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+ }
+
+monte_carlo2_expectation = as_tibble(monte_carlo)
+monte_carlo2_expectation %>% summarise(mean(X))
+```
+
+**2c:**  Using the definitions in 2a, compute $P(X>20)$. 
+
+```{r}
+# run same simulation, find P(x > 20)
+check_if_X_in_A = function(X){
+  return(X > 20)
+}
+
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         X = rep(NA,r), 
+                         X_in_A = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$X[i] = simulate_X()
+  monte_carlo$X_in_A[i] = check_if_X_in_A(monte_carlo$X[i])
+}
+
+monte_carlo2_prob20 = as_tibble(monte_carlo)
+monte_carlo2_prob20 %>% summarise(mean(X_in_A))
+```
+
+**2d:** Both 2b and 1d ask to compute the expectation.  How do the answers compare? Both 2c and 1c ask to compute the probability of being greater than 20.  How do the answers compare? Make sense of this phenomenon by visualizing these two distributions (i.e. make their histograms); what's going on with the distributions?
+
+```{r}
+hist(monte_carlo_expectation$X, 
+     main = "Expected Poisson number generated with lambda=10",
+     xlab = "Random Poisson number generated")
+hist(monte_carlo2_expectation$X,
+     main = "Expected Geometric(p=1/10) number generated",
+     xlab = "Random Geometric number generated")
+hist(monte_carlo_prob20$X,
+     main = "P(rpois(lambda=10) > 20)",
+     xlab = "Random Poisson number generated")
+hist(monte_carlo2_prob20$X,
+     main = "P(rgeom(1,1/10) > 20)",
+     xlab = "Random Geometric number generated")
+```
+**Comparing 2b and 1d (about the expectations), the mean of both distributions is about 10. But the distribution is quite different, as with the Poisson expectation we see a resemblance of a bell curve. But with the Geometric(p=1/10) we see that the frequency decreases as the random generated number gets higher.**
+
+**Comparing 2c and 1c (about P(X > 20)), we see that the Geometric distribution is very similar to the previous Geometric distribution, as well as with the Poisson distribution. The probability of X > 20 is different, as P(x > 20) for Poisson distribution is < 1%. But for the Geometric distribution, its probability that the random geometric number generated is close to 10%. So random Geometric numbers generated in this case have a higher chance of being a larger number than the random Poisson numbers generated.**
+
+### 3) Memes, part 1  (Please forgive me.  I drank too much coffee before writing this question.)
+
+In class thus far, there have been 416 comments posted in the bbcollaborate chat during class.  An expert panel has judged 47 of these comments to be memes.  
+
+The big-bad-deans say that they are concerned "if there is evidence that more than 10% of comments are memes."  So, this looks like bad news, 47/416 > 10%.  
+
+Karl pleads with the deans:  "Please, oh please, you big-bad-deans...  Memeing is totally random." (I don't actually know what this notion of "random" means, but please just run with it for this question.)
+
+Then, along comes you, a trusty and dedicated 340 student. You say that "because we have only observed 416 comments, we don't really know what the 'true proportion' of memes."  
+
+**3a:**  What would be a good distribution for the number of memes?
+**Bernoulli distribution could be used.**
+
+**3b:**  Using your distribution from 3a, test the null hypothesis that the 'true proportion' is actually 10\%. It's all up to you now . . .  report the p-value.
+
+$H_0$: The true proportion of memes / comments is 10%.
+```{r, warnings=FALSE}
+# sample proportion
+n = 416
+phat = 47/416
+
+simulate_S = function(){
+  
+ # simulate S using 10% 
+ X = rbernoulli(n = n, 0.1)
+ S = mean(X)
+ return(S)
+}
+
+# test if simulated S is surprising
+# 0.11 (47 / 416) +/- 0.01 would be surprising 
+check_if_S_in_surprising_set = function(S){
+  return(abs(S) >= phat + 0.01)
+}
+
+# using monte_carlo
+r = 10000
+monte_carlo = data.frame(replicate = 1:r, 
+                         S = rep(NA,r), 
+                         S_in_suprising_set = rep(NA, r)) 
+for(i in 1:r){
+  monte_carlo$S[i] = simulate_S()
+  monte_carlo$S_in_suprising_set[i] = check_if_S_in_surprising_set(monte_carlo$S[i])
+ }
+
+monte_carlo = as_tibble(monte_carlo)
+p_val = monte_carlo %>% summarise(mean(S_in_suprising_set))
+p_val
+
+```
+**p value is low, meaning we should reject the null hypothesis**
+
+
+**3c:**  After seeing your answer to 3b, the deans retort, "just because you failed to reject the null hypothesis does not mean that we accept your null hypothesis of 9%." But you respond, "you said you are concerned 'If there is evidence that more than 10% of comments are memes.'" We interpret our failure to reject as insufficient evidence that more than 10% of comments are memes. They begrudgingly go along with your point (and say that they are going to clarify their language in the future).  In the end, they ask you to provide a 95% confidence interval for the true proportion.  Provide a 95% confidence interval for the 'true proportion'.
+```{r, message=FALSE}
+qs = monte_carlo$S %>% quantile(prob =c(.025, .975))
+qs
+
+hist(monte_carlo$S, main = "Imagined Experiments", breaks = 30)
+lines(qs[1]*c(1,1), c(0,10^9), col = "red", lwd = 3)
+lines(qs[2]*c(1,1), c(0,10^9), col = "red", lwd = 3)
+```
+**Its estimated that the true proportion of memes to comments lies between 7.2% and 13%**
+```
+
+

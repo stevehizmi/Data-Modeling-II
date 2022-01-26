@@ -1,0 +1,134 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy=FALSE,strip.white=FALSE,fig.align="center",comment=" #")
+
+# install necessary packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(knitr,tidyverse)
+
+```
+
+---
+
+[Link to source file](ds04.Rmd)
+
+## Group Discussion (5-10 min)
+
+As a group, briefly discuss the following questions.
+
+1. So what is the defining feature of Monte Carlo methods? I.e. what makes a method "Monte Carlo"?
+   - simulate an X
+   - see if the X falls within an event A
+   - replicate the process
+2. What are some advantages and drawbacks of Monte Carlo methods? List at least 2 of each.
+   - advantage: estimates the true value
+3. What are some ways a Monte Carlo method can fail?
+   - when true mean is infinite: 
+
+## Exercises (rest of discussion)
+
+Now, break off into groups of 3-4 students. In your group, nominate one person to share your screen. As a group, **choose at least 2** of the following exercises to complete (you're welcome to choose more!)
+
+**At the end, please delete any exercises or parts you did _not_ attempt before submitting!** This will help us grade more easily, thanks in advance!
+
+As usual, **bonus parts are _optional_** but will **give extra statistical _EXP_**. Do them if you have time and like the challenge! 😃
+
+---
+
+1. Estimating $\pi$.
+   a. Randomly generate $N$ pairs of points $(x,y)$ **uniformly** between $-1$ and $1$ for some large $N$ (at least $1000$, but the more the better!)
+   b. Using R, plot the points as **small dots**, along with [the unit circle](https://ggforce.data-imaginist.com/reference/geom_circle.html) (i.e. circle centered at $(0,0)$ with radius 1) and a [square that circumscribes it](https://www.varsitytutors.com/hotmath/hotmath_help/topics/circles-inscribed-in-squares). Your result should look similar to this:
+   <center><img src="pi.png" style="width:165px;"/></center>
+   c. What proportion of your points lie inside the circle? ([Hint](https://math.stackexchange.com/questions/198764/how-to-know-if-a-point-is-inside-a-circle))
+   d. How does this proportion relate to $\pi$, and how can you use it to estimate $\pi$?
+   e. Calculate your [percentage error](https://www.mathsisfun.com/numbers/percentage-error.html) from the [true value](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Constants.html).
+   f. **Bonus**: can you increase the accuracy of your estimation by using more points? How low can you get the error?
+   g. **Extra bonus**: Make a [**plot showing rate of convergence**](https://i.redd.it/08thk967jkm21.png) of your estimations, including both the value at each $N$, actual value (using a horizontal line), and the percentage error.
+
+```{r}
+# Do exercise 1 here
+if (!require("plotrix")) {
+
+ install.packages("plotrix")
+
+ stopifnot(require("plotrix"))
+
+}
+
+# Draw a unit circle that fits in a square.
+
+par(pty="s")
+
+plot(c(-1, 1), c(-1,1), type="n", asp=1, xaxs="i")
+
+plotrix::draw.circle(0,0,1)
+
+# Add points with color.
+
+x <- c(-0.5,0.5)
+
+y <- c(0.5,-0.5)
+
+points(x,y, col="red", pch=20)
+```
+
+---
+
+3. How many heads in a row should you see in $N$ flips of a fair coin?
+   a. Start by randomly flipping a fair coin ($p=0.5$) a total of $N=10$ times (hint: use either `rbernoulli` function from `purrr` or `rbinom` with `n=10` and `size=1`) and record how many heads (defined as a value of $1$) in a row you observe (this has been implemented in the function `longestHeadRun` function below for you.
+   b. Repeat the above step $M$ times (at least $1000$ times, but this time, don't use an extremely large $M$, since we will repeat the previous step for other values of $N$). What is the mean length of the largest run of heads in $10$ flips?
+      - **NOTE**: $N$ here is the _**size of each experiment**_ (i.e. each experiment consists of $N$ flips), whereas $M$ is _**how many experiments**_ are performed. It is common in Monte Carlo methods to have different parameters governing each experiment vs how many experiments are performed. Increasing $N$ (number of flips in each experiment) will increase the mean-run-length, whereas increasing $M$ (number of experiments) will increase the precision of your estimate of the mean-run-length.
+   c. Now, repeat the above (you may use the same $M$) for **at least 3** other values of $N$ (again, feel free to do more if you wish!). Display your results in a table.
+      - **NOTE** this step should be easy if you've written your code with good style. I recommend writing a function that does all the above for any given $N$ and $M$ and maybe $p$, e.g. `findMeanRun = function(N,M,p=0.5){......}`. Then, for different values of $N$ and $M$ you can simply change the arguments given to the function, e.g. `findMeanRun(10,1000)` or `findMeanRun(20,1000)`, etc.
+      - **ALSO NOTE** the above function syntax^ sets `N` and `M` as arguments to the function without default values, but sets `0.5` as the default value of the argument `p`. For a different example, [see this](https://www.javatpoint.com/r-function-default-arguments).
+   d. Validate your results against other people's results (for example, [this post](https://math.stackexchange.com/a/1409539)). Are your results consistent with others?
+   e. **Bonus**: run a few more values of $N$ and plot the results, showing the mean run length vs number of flips $N$. (bonus²: what happens if you increase $M$?)
+   f. [**DoublePlusBonus**](https://en.wikipedia.org/wiki/Newspeak#:~:text=doubleplusgood%20%E2%80%94%20The%20word%20that%20replaced,as%20excellent%2C%20fabulous%2C%20and%20fantastic) if you still want MORE: Like [the post referenced above](https://math.stackexchange.com/questions/1409372/what-is-the-expected-length-of-the-largest-run-of-heads-if-we-make-1-000-flips/1409539#1409539), can you fit a smooth curve through the points?
+
+```{r, results='hide'}
+# given output of rbernoulli or rbinom (a vector of 0's and 1's)
+# compute the length of the longest continuous run of 1's
+longestHeadRun = function(trials){
+  runs = rle(trials)
+  return(max(c(0,runs$lengths[runs$values==1])))
+}
+
+# demo (output hidden for brevity)
+longestHeadRun(c(0,0,0,0,0,0,0,0,0,0)) # returns 0
+longestHeadRun(c(1,0,1,1,0,1,1,1,1,0)) # returns 4
+```
+
+```{r}
+# Do exercise 3 here
+
+# part a
+longestHeadRun(rbinom(n = 10, size = 1, prob = 0.5))
+
+# part b
+total = 0
+for(i in 1:1000)
+   total = total + longestHeadRun(rbinom(n = 10, size = 1, prob = 0.5))
+
+total / 1000
+
+# part c
+avg1 = 0
+avg2 = 0
+avg3 = 0
+for(i in 1:1000)
+   avg1 = avg1 + longestHeadRun(rbinom(n = 10, size = 1, prob = 0.5))
+
+for(i in 1:1000)
+   avg2 = avg2 + longestHeadRun(rbinom(n = 15, size = 10, prob = 0.5))
+
+for(i in 1:1000)
+   avg3 = avg3 + longestHeadRun(rbinom(n = 20, size = 100, prob = 0.5))
+
+tibble(avg1 = avg1/1000, avg2 = avg2/1000, avg3=avg3/1000)
+
+# part d
+# looking at the other post, our results are not consistent with theirs. It seems that the more flips we # do that the closer the longestHeadRun goes to zero
+```
+
+## Submission
+
+As usual, make sure the **names of everyone** who worked on this with you is included in the header of this document. Then, **knit this document** and submit **both this file and the HTML output** on Canvas under Assignments ⇒ Discussion 4

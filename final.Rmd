@@ -1,0 +1,54 @@
+---
+title: "Final Exam for Stat 340"
+author: "Steven Hizmi"
+output: html_document
+---
+
+A lot of the time spent doing "knowledge work" is time spent being stuck.  As such, one of the most formative parts of projects is the time spent getting stuck. 
+
+In a homework for a typical stat/math/cs course, when you get stuck, there is usually a right answer to find.  Getting stuck in projects is harder because there is not usually a "right answer", but rather "better solutions" and "worse solutions".  This type of uncertainty makes it more real.  
+
+Please keep each answer somewhere around a couple sentences.  Perhaps some might require up to a couple paragraphs, but this is not required. Please keep questions *in italics* and your responses in regular font. 
+
+1) *Describe a part of your project for which you got "stuck".  You could be stuck alone or stuck with you group.*
+ 
+  My group and I were working on a project analyzing pollution with the goal of giving evidence in support of reducing pollution levels consistently. So I thought it would be a cool idea to see how the significant decrease in human activity during the Covid lockdowns in Wisconsin affected air pollution. So I made a few graphs with dates on them measured with the overall air cleanliness/safety. I wanted to highlight areas on the graph where Covid lockdowns were in effect. Sort of when the first case appeared and when we went into lockdown and what happened when the lockdown was over. The first roadblock was that there was no data for the back half of 2020 on the US AQI website. I also had trouble trying to highlight portions of the graph that would represent lockdowns. 
+
+2)  *How did you realize you were stuck?*
+
+  The issue with the data only being available for the first half of 2020 wasn't really an issue in the sense that I could fix it. It was more of a roadblock, where I had to weigh my options. Pick something else to do? or continue with what I have. So I thought about it for a bit, and looked at the Covid timeline to see if there was even a lockdown during the first 6 months of 2020. So I found that the first reported case was in early February, and that the first stay at home order was in late March, all within the first 4 months. SO I thought, if there is a significant change in the air pollution levels in the first 6 months of 2020 then that would mean there is evidence that human activity has a huge impact onn air pollution levels, and that it would be important to show our impact and suggest we keep reducing pollution as much as possible. As for highlighting the portion on my graph, I thought it would be a nice addition to see visually when the stay at home orders were in effect and to see that timeline along with pollution levels. Trying to do this was a bigger issue than what I thought, as I thought I could add a rectangle that was transparent and set the boundaries. That ended up not working, so I looked at stack overflow and tried to do what they did, and still no results. So I had to weigh the pros and cons of the situation, keep trying to figure this out and spend more time on something that would be a nice addition but not necessary, or figure out a different solution. I knew I was stuck in this situation as it took me 2+ hours and still no results. Was it really worth the time to figure this out where I could be exploring other parts of our project or even study for other exams / finish other group projects as it is finals week and we all have a lot going on.
+
+3) *What did it feel like to be stuck?  *
+  
+  It was really frustrating to be honest. Knowing that adding a transparent rectangle to the graph should be quick and simple and to find it wasn't was really irritating. As for the other roadblock, not having enough data for the whole year in 2020, was a bit scary. I didn't know if I should change my whole idea and work on something else. I really didn't know what to do in that situation. was it worth it to research and find new data and explore a different idea? Maybe. But I am glad with the way it turned out.
+
+4)  *Did your group talk about being stuck?  If so, what did you say to one another?*
+
+  I did not talk to my group about being stuck. We all had different schedules for the past 2 weeks, and my group memebers were really busy with other group projects/studying for exams.
+
+5)  *Describe how you got unstuck. *
+  
+  For the first issue with having only the first 6 months of 2020 in my data, I looked at the covid timeline like I mentioned before. I saw that the first cases were coming in February, and that the first stay at home order was in March so there still was a few months of data that I could still analyize. So I decided to continue using the data that I had found. For the next part I was stuck on, highlighting a portion of the graph that represented the stay at home order, I decided to not include it. I think getting stuck on that for a few hours when I could be continuing the group project, finishing other class group projects, or studying for exams was a waste of time. I decided that I could include what I wanted to show visually in my writing.
+
+6)  *Did you come up with more than one solution to the getting stuck?  Describe them.  If there was more than one, describe how you chose which path to pursue.*
+
+  I could have move passed using the data from 2020, but I decided not to because I think there is still some good data to use there so I decided to stick with it. For highlighting a portion of the graph I could have not done it and not included anything about the stay at home orders, included a rectangle(it was not transparent so it looked poor), or not include it but describe it in words. So I decided to do the third option, as it seemed the most optimal to me.
+
+## Group dynamics
+
+One hard thing about groups is that it can be hard to work together as a team.  There is no "correct" way to do this.  
+
+7)  *Describe how your team worked together. *
+  
+  We used discord to communicate, and we used github to collaborate. Over discord we would discuss which part of the project we were interested/ wanted to do. So after we decided that, we went our own way and each came up with figures that we would analyize and then we would push those changes to github and that way we would all have the same files and data. We also could see each others work, and when any of us had a logistal question we would communicate pretty quickly and get that resolved.
+
+8)  *If you were a "manager" that was supervising your team, what feedback would you provide?  Reflect on both areas where you performed well and things that you could work on.  *
+  
+  I think we did well on deciding what to do and how we were going to do it. We got connected pretty early and brainstormed ideas and knew what we wanted to do earlier on. I think we could have worked on prioritizing better. I understand we all had a lot to do especially because its finals week, but I think if we had something concrete, like all of us had a figure or two so show and we could push that into github and work on any debugging/merging issues would have been a good idea. I don't like pushing things off to the last day typically, especially a final project like this. But overall I think it turned out just fine and I have nothing but good things to say about my group members.
+
+## Misc 
+
+9) *If there is anything that you wished I asked about your project and you really want to share it, please put it here.  No response required. *
+
+
+10) *If you have any feedback on this course, please fill out the course evaluations online.* 
